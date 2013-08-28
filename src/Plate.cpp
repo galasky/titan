@@ -110,6 +110,48 @@ Plate::echec(Piece::Color color)
   return false;
 }
 
+bool
+Plate::echecEtMat(Piece::Color color)
+{
+  std::list<point>			listSave = _listPoints;
+  std::vector<std::vector<Piece> >	pSave;
+
+  pSave << _plate;
+  if (this->echec(color))
+    {
+      for (int y = 0; y < 8; y++)
+	{
+	  for (int x = 0; x < 8; x++)
+	    {
+	      if (_plate[y][x].getColor() == color)
+		{
+		  std::cout << x << " " << y << std::endl;
+		  std::cout << "i got points\n";
+		  for (std::list<point>::iterator it = _listPoints.begin(); it != _listPoints.end(); ++it)
+		    {
+		      this->getPoints(y, x);
+		      std::cout << "next move " << it->x << " " << it->y << "\n";
+		      this->move(color, action(point(y, x), *it));
+		      std::cout << "move\n";
+		      if (this->echec(color))
+			_plate << pSave;
+		      else
+			{
+			  _listPoints = listSave;
+			  return false;
+			}
+		    }
+		}
+	    }
+	}
+      _listPoints = listSave;
+      return true;
+    }
+  _listPoints = listSave;
+  return false;
+}
+
+
 int
 Plate::getValue(Piece::Color color)
 {
@@ -306,4 +348,17 @@ Plate::operator=(const Plate &other)
   for (int y = 0; y < 8; y++)
     for (int x = 0; x < 8; x++)
       _plate[y][x] = other.access(y, x);	  
+}
+
+void	operator<<(std::vector<std::vector<Piece> > &a, const std::vector<std::vector<Piece> > &b)
+{
+  a.resize(b.size());
+  for (int y = 0; y < 8; y++)
+    {
+      a[y].resize(b[y].size());
+      for (int x = 0; x < 8; x++)
+	{
+	  a[y][x] = b[y][x];
+	}
+    }
 }

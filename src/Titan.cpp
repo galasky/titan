@@ -4,6 +4,8 @@
 
 Titan::Titan() : _p1(Piece::WHITE), _p2(Piece::BLACK), _window(sf::VideoMode(992, 992), "SFML window")
 {
+  _end = false;
+
   _actions.resize(4);
   _stape = 0;
   _keyRelease = true;
@@ -60,6 +62,12 @@ Titan::Titan() : _p1(Piece::WHITE), _p2(Piece::BLACK), _window(sf::VideoMode(992
 
   _buffSound.LoadFromFile("materials/sound/no.ogg");
   _soundNo.SetBuffer(_buffSound);
+
+  _buffEchec.LoadFromFile("materials/sound/echecetmat.ogg");
+  _soundEchec.SetBuffer(_buffEchec);
+
+  _buffPop.LoadFromFile("materials/sound/pop.ogg");
+  _soundPop.SetBuffer(_buffPop);
 
   for (int y = 0; y < 8; y++)
     {
@@ -176,6 +184,22 @@ Titan::doStape()
       return ;
     }
 
+  /*  if (_stape == 3 && _plate.echec(Piece::WHITE) && _plate.echecEtMat(Piece::WHITE))
+      {
+      _end = true;
+      return;
+      }
+
+      if (_stape == 1 && _plate.echec(Piece::BLACK) && _plate.echecEtMat(Piece::BLACK))
+      {
+      _end = true;
+      return;
+      }
+  */
+
+  if (_stape == 1 || _stape == 3)
+    _soundPop.Play();
+
   if (_stape == 1 && _plate.echec(Piece::WHITE))
     {
       _soundNo.Play();
@@ -209,16 +233,19 @@ Titan::catchEvent()
     {
       if (_event.Type == sf::Event::Closed)
 	_window.Close();
-      if (_keyRelease == true && _event.Type == sf::Event::MouseButtonPressed)
+      if (_end == false)
 	{
-	  _keyRelease = false;
-	  _actions[_stape] = point(_event.MouseButton.Y / 124, _event.MouseButton.X / 124);
-	  //	  std::cout << _event.MouseButton.Y / 124 << " " <<  _event.MouseButton.X / 124  << std::endl;
-	  this->doStape();
-	}
-      if ( _event.Type == sf::Event::MouseButtonReleased)
-	{
-	  _keyRelease = true;
+	  if (_keyRelease == true && _event.Type == sf::Event::MouseButtonPressed)
+	    {
+	      _keyRelease = false;
+	      _actions[_stape] = point(_event.MouseButton.Y / 124, _event.MouseButton.X / 124);
+	      //	  std::cout << _event.MouseButton.Y / 124 << " " <<  _event.MouseButton.X / 124  << std::endl;
+	      this->doStape();
+	    }
+	  if ( _event.Type == sf::Event::MouseButtonReleased)
+	    {
+	      _keyRelease = true;
+	    }
 	}
     }
 }
@@ -231,7 +258,7 @@ Titan::run()
   while (_window.IsOpened())
     {
       this->draw();
-      this->catchEvent();
+      this->catchEvent();	
       usleep(10000);
     }
 }

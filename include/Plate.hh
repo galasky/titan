@@ -47,6 +47,7 @@ public:
 
   point			findKing(Piece::Color);
   bool			echec(Piece::Color);
+  bool			echecEtMat(Piece::Color);
 
   int			getValue(Piece::Color);
   std::list<point>	getPoints(int x, int y);
@@ -70,5 +71,7 @@ private:
   void	getPointsREINE(int x, int y);
   void	getPointsROI(int x, int y);
 };
+
+void	operator<<(std::vector<std::vector<Piece> > &, const std::vector<std::vector<Piece> > &);
 
 #endif	//__PLATE_HH__

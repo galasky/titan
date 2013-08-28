@@ -38,8 +38,11 @@ private:
   sf::Sound			_soundNo;
   sf::SoundBuffer		_buffSound;
 
-  sf::Sound			_soundSword;
-  sf::SoundBuffer		_buffSword;
+  sf::Sound			_soundEchec;
+  sf::SoundBuffer		_buffEchec;
+
+  sf::Sound			_soundPop;
+  sf::SoundBuffer		_buffPop;
 
   std::vector<sf::Image>	_black;
   std::vector<sf::Image>	_black2;
@@ -51,6 +54,8 @@ private:
   std::vector<point>		_actions;
   int				_stape;
   bool				_keyRelease;
+
+  bool				_end;
 };
 
 #endif
